@@ -1,6 +1,8 @@
-mod CatalogScraper;
-mod HTMLGenerator;
+mod catalog_scraper;
+mod html_generator;
+
+use std::io;
 
 fn main() {
-    
+
 }
