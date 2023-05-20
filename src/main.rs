@@ -1,3 +1,6 @@
+mod CatalogScraper;
+mod HTMLGenerator;
+
 fn main() {
-    println!("Hello, world!");
+    
 }
