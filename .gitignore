@@ -1,0 +1,3 @@
+/target
+#Ignore IDE related filetypes
+.idea
