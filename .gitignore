@@ -1,3 +1,4 @@
 /target
-#Ignore IDE related filetypes
+#Ignore IDE related filetypes or automatically generated files
 .idea
+.lock
