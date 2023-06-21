@@ -2,7 +2,6 @@ use reqwest::Error;
 use scraper::{Selector, Html};
 use lazy_static::lazy_static;
 
-
 //I want to go through each of the last 6 years of Catalogs, navigate to programs, then iterate thru each program
 
 #[doc = "Generates CSS Selector."]
@@ -14,6 +13,20 @@ lazy_static! {
     static ref TABLE: Selector = make_selector("table"); //selector for table
     static ref ROW: Selector = make_selector("tr"); //selector for table rows
     static ref NAV: Selector = make_selector("div.n2_links > a.navbar"); //selector for the immediate child navbar of a div element with class n2_links
+}
+
+//hard-coding in the URLs because it's hard to access them. I'll figure it out at some point
+//TODO: Figure out how to do this automatically. I'm so close, but can;t figure out when it skips a number
+#[doc = "Getting the URL of the catalog homepage from a given year"]
+pub fn get_url(year: u8) -> Option<&'static str> {
+    match year {
+        18 => Some("https://catalog.rpi.edu/index.php?catoid=18"),
+        19 => Some("https://catalog.rpi.edu/index.php?catoid=20"),
+        20 => Some("https://catalog.rpi.edu/index.php?catoid=21"),
+        21 => Some("https://catalog.rpi.edu/index.php?catoid=22"),
+        22 => Some("https://catalog.rpi.edu/index.php?catoid=24"),
+        _ => None,
+    }
 }
 
 #[doc = "Grabs raw HTML from a given URL."]
@@ -53,3 +66,4 @@ pub fn nav_to_programs(raw: &String) -> Result<String, Error> {
     let raw_programs = request_html(&true_url).expect("fetching programs failed");
     Ok(raw_programs)
 }
+

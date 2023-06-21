@@ -2,11 +2,13 @@ mod catalog_scraper;
 mod html_generator;
 mod student;
 
-use catalog_scraper::nav_to_programs;
-use warp::{Filter, Reply};
+use catalog_scraper::{nav_to_programs, get_url, request_html};
 use html_generator::generate_html;
 use student::Student;
+
+use warp::{Filter, Reply};
 use std::clone::Clone;
+use tokio::task::spawn_blocking;
 
 #[doc = "Main and stuff"]
 #[tokio::main]
@@ -35,8 +37,6 @@ async fn main() {
     //Everything after starting the server needs to be done through server stuff, as in I can't put anything else in main
 
     //TODO: Using Student, request HTML from the specific year's catalog home page
-//    let home = catalog_scraper::request_html("https://catalog.rpi.edu/index.php").expect("fetching homepage failed");
-//    let programs = nav_to_programs(&home).expect("fetching programs failed");
 
     //TODO: Check thru each of Student's majors, paying attention to concentration
 
@@ -47,15 +47,19 @@ async fn main() {
     //TODO: Display feedback post-processing on site
 }
 
-async fn submit_student(form: Student) -> Result<impl Reply, warp::Rejection> {
-    let student = form.clone();
+async fn submit_student(submission: Student) -> Result<impl Reply, warp::Rejection> {
+    let student = submission.clone();
+    let url = get_url(student.year).unwrap();
 
-    println!("Year: {}", student.year);
-    println!("Majors: {}", student.majors);
-    println!("Concentrations: {}", student.concentrations);
-    println!("Minors: {}", student.minors);
-    println!("Pathway: {}", student.pathway);
-    println!("Courses: {}", student.courses);
+    //'spawn_blocking' allows blocking operations to execute without blocking asynchronous execution flow
+    //'move' brings 'url' and 'home' into scope of closure
+    let home = spawn_blocking(move || {
+        request_html(url).expect("fetching homepage failed")
+    }).await.expect("blocking task failed for homepage");
+    let programs = spawn_blocking(move || {
+        nav_to_programs(&home).expect("fetching programs failed")
+    }).await.expect("blocking task failed for programs");
+    println!("Programs HTML: {}", programs);
 
     Ok(warp::reply::html("Submission received"))
 }
