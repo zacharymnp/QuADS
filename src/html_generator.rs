@@ -17,10 +17,27 @@ pub fn generate_html(dialog: Option<&str>) -> String {
         <body>
             <h1>QuADS</h1>
             <p>Questionablly Accurate Degree Simulator</p>
+            <p>If multiple inputs, please dilineate with comma then a space (, ). Department and course code for courses. </p>
             {}
             <form method="post" action="/submit">
-                <label for="message">Enter a message:</label><br>
-                <input type="text" id="message" name="message"><br>
+                <label for="year">Year:</label><br>
+                <input type="number" id="year" name="year"><br>
+
+                <label for="majors">Majors:</label><br>
+                <input type="text" id="majors" name="majors"><br>
+
+                <label for="concentrations">Concentrations:</label><br>
+                <input type="text" id="majors" name="concentrations"><br>
+
+                <label for="minors">Minors:</label><br>
+                <input type="text" id="majors" name="minors"><br>
+
+                <label for="pathway">Pathway:</label><br>
+                <input type="text" id="majors" name="pathway"><br>
+
+                <label for="courses">Courses:</label><br>
+                <input type="text" id="majors" name="courses"><br>
+
                 <input type="submit" value="Submit">
             </form>
         </body>
